@@ -160,6 +160,13 @@ jobs:
 
       - name: Push to NuGet.org
         shell: pwsh
-        run: >-
-          dotnet nuget push ".nuget/*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}"
-          --source https://api.nuget.org/v3/index.json --skip-duplicate
+        run: |
+          # Windows 上的 dotnet nuget push 不认识含斜杠的通配符（dist/*.nupkg 会报
+          # "File does not exist"），所以这里自己解析出完整路径再传给它。
+          $package = Get-ChildItem .nuget -Filter *.nupkg | Select-Object -First 1
+          if (-not $package) {
+            Write-Error ".nuget 下没有生成 nupkg，先看上面的 Pack 步骤"
+            exit 1
+          }
+          Write-Host "推送 $($package.Name)（$($package.Length) 字节）"
+          dotnet nuget push $package.FullName --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
