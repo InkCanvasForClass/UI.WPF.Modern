@@ -21,7 +21,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="iNKORE.UI.WPF.Modern" Version="$(ModernPackageVersion)" />
+        <PackageReference Include="InkCanvasForClass.UI.WPF.Modern" Version="$(ModernPackageVersion)" />
         <AssemblyMetadata Include="ModernPackageVersion" Value="$(ModernPackageVersion)" />
     </ItemGroup>
 </Project>

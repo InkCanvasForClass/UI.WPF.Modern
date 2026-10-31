@@ -13,6 +13,13 @@
     Give us a star if you like this!
 </p>
 
+> **This repository is an unofficial fork.** It is maintained by
+> [InkCanvasForClass](https://github.com/InkCanvasForClass) for its own project and is not affiliated with or
+> endorsed by iNKORE Studios. Upstream: https://github.com/iNKORE-NET/UI.WPF.Modern. The fork keeps the upstream
+> `LICENSE.md` (iNKORE.UI.WPF.Modern Software License) and all copyright notices; changes made here are
+> InkCanvasForClass-specific patches. The forked package is published as `InkCanvasForClass.UI.WPF.Modern`
+> (assemblies and namespaces stay `iNKORE.UI.WPF.Modern`).
+
 <p align="center">
   <a href="https://github.com/iNKORE-NET/UI.WPF.Modern/releases"><img src="https://img.shields.io/github/downloads/iNKORE-NET/UI.WPF.Modern/total?color=%239F7AEA" alt="Release Downloads"></a>
   <a href="#"><img src="https://img.shields.io/github/repo-size/iNKORE-NET/UI.WPF.Modern?color=6882C4" alt="GitHub Repo Size"></a>

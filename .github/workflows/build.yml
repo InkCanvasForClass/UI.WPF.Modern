@@ -65,8 +65,8 @@ jobs:
         id: files
         shell: pwsh
         run: |
-          $package = Get-Item .nuget/iNKORE.UI.WPF.Modern.*.nupkg
-          $gallery = "iNKORE.UI.WPF.Modern.Gallery@$($package.BaseName.Substring('iNKORE.UI.WPF.Modern.'.Length)).zip"
+          $package = Get-Item .nuget/InkCanvasForClass.UI.WPF.Modern.*.nupkg
+          $gallery = "iNKORE.UI.WPF.Modern.Gallery@${{ steps.version.outputs.version }}.zip"
           New-Item -ItemType Directory -Force artifacts | Out-Null
           Compress-Archive -Path source/iNKORE.UI.WPF.Modern.Gallery/bin/Release/net6.0-windows10.0.18362.0/* `
             -DestinationPath "artifacts/$gallery"

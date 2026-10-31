@@ -1,3 +1,13 @@
+> **This is an unofficial fork.** This package is `InkCanvasForClass.UI.WPF.Modern`, a fork of
+> [iNKORE.UI.WPF.Modern](https://github.com/iNKORE-NET/UI.WPF.Modern) maintained by InkCanvasForClass for its own
+> project. It is not published by, affiliated with, or endorsed by iNKORE Studios. The assemblies and namespaces
+> keep their original `iNKORE.UI.WPF.Modern` names, so no code changes are needed when switching to this package.
+>
+> - Project Name: iNKORE.UI.WPF.Modern
+> - Authors: iNKORE Studios and all iNKORE.UI.WPF.Modern contributors
+> - Project Repository: https://github.com/iNKORE-NET/UI.WPF.Modern
+> - License: [iNKORE.UI.WPF.Modern Software License](https://github.com/iNKORE-NET/UI.WPF.Modern/blob/main/LICENSE.md)
+
 Modern (Fluent 2) styles and controls for your WPF applications.
 
 - Repository: https://github.com/iNKORE-NET/UI.WPF.Modern/

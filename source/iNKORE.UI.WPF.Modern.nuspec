@@ -6,21 +6,23 @@
 -->
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
     <metadata>
-        <id>iNKORE.UI.WPF.Modern</id>
+        <!-- 包 ID 不同于上游：这是 InkCanvasForClass 维护的非官方 fork，不能占用 iNKORE 在 NuGet.org 上的包 ID。
+             程序集名、命名空间保持 iNKORE.UI.WPF.Modern 不变，依赖方无需改代码。 -->
+        <id>InkCanvasForClass.UI.WPF.Modern</id>
         <version>$version$</version>
-        <title>iNKORE.UI.WPF.Modern</title>
+        <title>InkCanvasForClass.UI.WPF.Modern</title>
         <authors>Yoojun Zhou</authors>
         <owners>iNKORE Studios</owners>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <licenseUrl>https://github.com/iNKORE-NET/UI.WPF.Modern/blob/main/LICENSE.md</licenseUrl>
         <icon>icon.png</icon>
         <readme>README.md</readme>
-        <projectUrl>https://docs.inkore.net/ui-wpf-modern</projectUrl>
-        <description>Modern (Fluent 2) styles and controls for your WPF applications.</description>
+        <projectUrl>https://github.com/InkCanvasForClass/UI.WPF.Modern</projectUrl>
+        <description>Unofficial fork of iNKORE.UI.WPF.Modern, maintained by InkCanvasForClass for the InkCanvasForClass project. Modern (Fluent 2) styles and controls for WPF applications. Not affiliated with or endorsed by iNKORE Studios.</description>
         <copyright>Copyright © iNKORE! (iNKORE Studios) 2025. All rights reserved.</copyright>
         <language>en-US</language>
         <tags>WPF;C#;Modern;Fluent;UI;iNKORE;XAML;Metro;CSharp;dotNET;Controls;Style;UI;WinUI</tags>
-        <repository type="git" url="https://github.com/iNKORE-NET/UI.WPF.Modern.git"/>
+        <repository type="git" url="https://github.com/InkCanvasForClass/UI.WPF.Modern.git"/>
 
         <dependencies>
             <group targetFramework="net452">
