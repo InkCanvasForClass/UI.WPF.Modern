@@ -8,6 +8,12 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      version:
+        description: "可选：指定包版本（例如 0.11.0-icc.1）。留空则自动用 <VersionPrefix>-icc.<提交短哈希>"
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: read
@@ -87,3 +93,73 @@ jobs:
         env:
           PACKAGE: ${{ steps.build.outputs.package }}
           GALLERY: ${{ steps.build.outputs.gallery }}
+
+  # 一键发布：Actions -> Release -> Run workflow（分支选 main），不用打 tag、不用手写版本号。
+  # 版本默认是 <VersionPrefix>-icc.<提交短哈希>，每次提交都不一样，天然不会互相覆盖；
+  # 真想指定版本时，在 version 输入框里写（例如 0.11.0-icc.1）。
+  publish-dispatch:
+    if: github.event_name == 'workflow_dispatch' && github.ref_type == 'branch'
+    runs-on: windows-latest
+    environment: nuget  # 想加人工闸门就在这里配 required reviewers
+    permissions:
+      contents: read
+      id-token: write  # NuGet trusted publishing
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0  # 需要 tag 才能用 git describe 推出基础版本号
+          fetch-tags: true
+
+      - uses: microsoft/setup-msbuild@30375c66a4eea26614e0d39710365f22f8b0af57 # v3.0.0
+
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        run: |
+          $version = "${{ inputs.version }}".Trim()
+          if (-not $version) {
+            $sha = "${{ github.sha }}".Substring(0, 7)
+            # 基础版本号跟着最近的 v* tag 走（v0.11.0 -> 0.11.0），上游发新 tag 后自动跟进。
+            $tag = (git describe --tags --abbrev=0 2>$null)
+            if ($tag -match '^v(\d+\.\d+\.\d+)') {
+              $base = $Matches[1]
+            } else {
+              $base = msbuild source/iNKORE.UI.WPF.Modern.Controls/iNKORE.UI.WPF.Modern.Controls.csproj -getProperty:VersionPrefix
+            }
+            $version = "$base-icc.$sha"
+          }
+          if ($version -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z.]+)?$') {
+            Write-Error "版本号 '$version' 不合法：要形如 1.2.3 或 1.2.3-icc.1"
+            exit 1
+          }
+          "VERSION=$version" >> $env:GITHUB_OUTPUT
+          Write-Host "本次发布版本：$version"
+
+      - name: Build
+        shell: pwsh
+        run: >-
+          msbuild iNKORE.UI.WPF.Modern.sln -restore -p:Configuration=Release "-p:Platform=Any CPU"
+          -p:ContinuousIntegrationBuild=true -p:Version=${{ steps.version.outputs.VERSION }}
+
+      - name: Pack
+        shell: pwsh
+        run: >-
+          msbuild source/iNKORE.UI.WPF.Modern.Controls/iNKORE.UI.WPF.Modern.Controls.csproj -t:Pack
+          -p:NoBuild=true -p:Configuration=Release -p:ContinuousIntegrationBuild=true
+          -p:Version=${{ steps.version.outputs.VERSION }}
+
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: NuGet login
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: Push to NuGet.org
+        shell: pwsh
+        run: >-
+          dotnet nuget push ".nuget/*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}"
+          --source https://api.nuget.org/v3/index.json --skip-duplicate
